@@ -107,6 +107,17 @@ export default function ItemList({ user, onViewItem, onNeedLogin, showToast }: P
                   <div className="item-card-title">{item.title}</div>
                   <div className="item-card-desc">{item.description}</div>
                   <div className="item-card-expect">期望交换：{item.expected_item}</div>
+                  <div className="item-card-rating">
+                    {item.owner_rating_count ? (
+                      <>
+                        <span className="rating-star">★</span>
+                        <span className="rating-score">{Number(item.owner_avg_rating).toFixed(1)}</span>
+                        <span className="rating-count">{item.owner_rating_count}人评价</span>
+                      </>
+                    ) : (
+                      <span className="rating-none">暂无评价</span>
+                    )}
+                  </div>
                   <div className="item-card-meta">
                     <div className="item-card-owner">
                       <div className="mini-avatar">{(item.owner_name || '?')[0]}</div>

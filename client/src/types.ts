@@ -20,6 +20,8 @@ export interface Item {
   owner_name?: string;
   owner_avatar?: string;
   owner_bio?: string;
+  owner_avg_rating?: number | null;
+  owner_rating_count?: number;
 }
 
 export interface Exchange {

@@ -215,6 +215,18 @@
       font-size: 12px;
       font-weight: 500;
     }
+    .item-card-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+    .item-card-rating .rating-star { color: #f59e0b; font-size: 14px; line-height: 1; }
+    .item-card-rating .rating-score { font-weight: 700; color: #f59e0b; }
+    .item-card-rating .rating-count { color: #999; }
+    .item-card-rating .rating-none { color: #bbb; }
 
     /* 物品详情 */
     .detail-container {
@@ -285,6 +297,19 @@
     .detail-owner .owner-info { flex: 1; }
     .detail-owner .owner-name { font-weight: 600; font-size: 15px; }
     .detail-owner .owner-bio { font-size: 13px; color: #888; }
+    .owner-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .owner-rating .stars-row { display: inline-flex; gap: 2px; }
+    .owner-rating .star-sm { font-size: 16px; color: #ddd; line-height: 1; }
+    .owner-rating .star-sm.filled { color: #f59e0b; }
+    .owner-rating .owner-rating-score { font-weight: 700; color: #f59e0b; }
+    .owner-rating .owner-rating-count { color: #888; }
+    .owner-rating .owner-rating-none { color: #aaa; }
 
     /* 按钮 */
     .btn {

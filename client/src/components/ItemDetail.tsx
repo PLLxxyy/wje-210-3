@@ -101,6 +101,21 @@ export default function ItemDetail({ itemId, user, onBack, onNeedLogin, showToas
             <div className="owner-info">
               <div className="owner-name">{item.owner_name}</div>
               <div className="owner-bio">{item.owner_bio || '这个用户很懒，什么都没写'}</div>
+              <div className="owner-rating">
+                {item.owner_rating_count ? (
+                  <>
+                    <span className="stars-row">
+                      {[1, 2, 3, 4, 5].map(s => (
+                        <span key={s} className={`star-sm ${s <= Math.round(Number(item.owner_avg_rating)) ? 'filled' : ''}`}>★</span>
+                      ))}
+                    </span>
+                    <span className="owner-rating-score">{Number(item.owner_avg_rating).toFixed(1)}</span>
+                    <span className="owner-rating-count">{item.owner_rating_count} 人评价</span>
+                  </>
+                ) : (
+                  <span className="owner-rating-none">暂无评价</span>
+                )}
+              </div>
             </div>
           </div>
           {canExchange && (

@@ -9,26 +9,28 @@ router.get('/', (req: AuthRequest, res: Response) => {
   try {
     const { category, search, page = '1', limit = '12' } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
-    let sql = `SELECT items.*, users.nickname as owner_name, users.avatar as owner_avatar
-               FROM items JOIN users ON items.user_id = users.id WHERE items.status = 'available'`;
+    const conditions: string[] = ["items.status = 'available'"];
     const params: any[] = [];
 
     if (category && category !== '全部') {
-      sql += ' AND items.category = ?';
+      conditions.push('items.category = ?');
       params.push(category);
     }
     if (search) {
-      sql += ' AND (items.title LIKE ? OR items.description LIKE ?)';
+      conditions.push('(items.title LIKE ? OR items.description LIKE ?)');
       params.push(`%${search}%`, `%${search}%`);
     }
+    const where = 'WHERE ' + conditions.join(' AND ');
 
-    const countSql = sql.replace(/SELECT .* FROM/, 'SELECT COUNT(*) as total FROM');
-    const total = (db.prepare(countSql).get(...params) as any).total;
+    const total = (db.prepare(`SELECT COUNT(*) as total FROM items ${where}`).get(...params) as any).total;
 
-    sql += ' ORDER BY items.created_at DESC LIMIT ? OFFSET ?';
-    params.push(Number(limit), offset);
-
-    const items = db.prepare(sql).all(...params);
+    const items = db.prepare(`
+      SELECT items.*, users.nickname as owner_name, users.avatar as owner_avatar,
+        (SELECT ROUND(AVG(r.score), 1) FROM ratings r WHERE r.ratee_id = items.user_id) as owner_avg_rating,
+        (SELECT COUNT(*) FROM ratings r WHERE r.ratee_id = items.user_id) as owner_rating_count
+      FROM items JOIN users ON items.user_id = users.id ${where}
+      ORDER BY items.created_at DESC LIMIT ? OFFSET ?
+    `).all(...params, Number(limit), offset);
     res.json({ items, total, page: Number(page), limit: Number(limit) });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -39,7 +41,9 @@ router.get('/', (req: AuthRequest, res: Response) => {
 router.get('/:id', (req: AuthRequest, res: Response) => {
   try {
     const item = db.prepare(`
-      SELECT items.*, users.nickname as owner_name, users.avatar as owner_avatar, users.bio as owner_bio
+      SELECT items.*, users.nickname as owner_name, users.avatar as owner_avatar, users.bio as owner_bio,
+        (SELECT ROUND(AVG(r.score), 1) FROM ratings r WHERE r.ratee_id = items.user_id) as owner_avg_rating,
+        (SELECT COUNT(*) FROM ratings r WHERE r.ratee_id = items.user_id) as owner_rating_count
       FROM items JOIN users ON items.user_id = users.id WHERE items.id = ?
     `).get(req.params.id) as any;
     if (!item) return res.status(404).json({ error: '物品不存在' });

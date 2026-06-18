@@ -110,11 +110,11 @@ export default function ItemDetail({ itemId, user, onBack, onNeedLogin, showToas
                       ))}
                     </span>
                     <span className="owner-rating-score">{Number(item.owner_avg_rating).toFixed(1)}</span>
-                    <span className="owner-rating-count">{item.owner_rating_count} 人评价</span>
                   </>
-                ) : (
-                  <span className="owner-rating-none">暂无评价</span>
-                )}
+                ) : null}
+                <span className={item.owner_rating_count ? 'owner-rating-count' : 'owner-rating-count zero'}>
+                  {item.owner_rating_count || 0} 人评价
+                </span>
               </div>
             </div>
           </div>

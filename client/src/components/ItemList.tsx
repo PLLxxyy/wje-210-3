@@ -112,11 +112,11 @@ export default function ItemList({ user, onViewItem, onNeedLogin, showToast }: P
                       <>
                         <span className="rating-star">★</span>
                         <span className="rating-score">{Number(item.owner_avg_rating).toFixed(1)}</span>
-                        <span className="rating-count">{item.owner_rating_count}人评价</span>
                       </>
-                    ) : (
-                      <span className="rating-none">暂无评价</span>
-                    )}
+                    ) : null}
+                    <span className={item.owner_rating_count ? 'rating-count' : 'rating-count zero'}>
+                      {item.owner_rating_count || 0}人评价
+                    </span>
                   </div>
                   <div className="item-card-meta">
                     <div className="item-card-owner">
